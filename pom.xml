@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.blckroot.cmd</groupId>
-    <artifactId>com-blckroot-cmd</artifactId>
+    <groupId>com.blckroot.cmdr</groupId>
+    <artifactId>com-blckroot-cmdr</artifactId>
     <version>1.0.0</version>
 
     <properties>
@@ -13,6 +13,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <picocli.version>4.7.5</picocli.version>
         <junit.version>5.10.0</junit.version>
         <jacoco.version>0.8.10</jacoco.version>
     </properties>
@@ -43,6 +44,16 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.blckroot.cmd</groupId>
+            <artifactId>com-blckroot-cmd</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>${picocli.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
