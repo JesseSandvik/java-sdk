@@ -2,6 +2,7 @@ package com.blckroot.cmdr;
 
 import com.blckroot.cmd.command.ExecutableCommand;
 import com.blckroot.cmd.positionalParameter.PositionalParameter;
+import com.blckroot.cmdr.command.chain.CommandChain;
 
 
 public class Main {
@@ -23,8 +24,8 @@ public class Main {
         command.addExecutableSubcommand(executableCommandB);
         command.addExecutableSubcommand(executableCommandC);
 
-        CommandLineUtility commandLineUtility = new CommandLineUtility(command);
-        int exitCode = commandLineUtility.execute(args);
+        CommandChain commandChain = new CommandChain(command);
+        int exitCode = commandChain.execute(args);
         System.exit(exitCode);
     }
 }

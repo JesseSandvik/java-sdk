@@ -1,4 +1,4 @@
-package com.blckroot.cmdr;
+package com.blckroot.cmdr.command.chain;
 
 import com.blckroot.cmd.command.ExecutableCommand;
 import com.blckroot.cmd.option.Option;
@@ -27,6 +27,9 @@ class CommandLineBuilder {
         }
 
         this.commandSpec.usageMessage()
+                .autoWidth(true)
+                .adjustLineBreaksForWideCJKCharacters(true)
+                .abbreviateSynopsis(true)
                 .optionListHeading("\nOptions:%n")
                 .parameterListHeading("\nParameters:%n")
                 .commandListHeading("\nCommands:%n");

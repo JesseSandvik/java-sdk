@@ -1,15 +1,15 @@
-package com.blckroot.cmdr;
+package com.blckroot.cmdr.command.chain;
 
 import com.blckroot.cmd.command.ExecutableCommand;
 
-class CommandLineUtility {
+class CommandChainUtility implements CommandChainContract {
     private final ExecutableCommand parentCommand;
 
-    CommandLineUtility(ExecutableCommand parentCommand) {
+    CommandChainUtility(ExecutableCommand parentCommand) {
         this.parentCommand = parentCommand;
     }
 
-    public Integer execute(String[] args) {
+    public Integer execute(String[] arguments) {
         CommandLineBuilder commandLineBuilder = new CommandLineBuilder(parentCommand);
         commandLineBuilder.addStandardUsageHelp();
 
@@ -17,6 +17,6 @@ class CommandLineUtility {
             commandLineBuilder.addStandardVersionHelp();
         }
 
-        return commandLineBuilder.build().execute(args);
+        return commandLineBuilder.build().execute(arguments);
     }
 }
