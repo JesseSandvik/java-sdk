@@ -44,13 +44,15 @@ class CommandOrchestratorUtility implements CommandOrchestratorContract {
             }
 
             ParseResult commandLineParseResult = commandLine.getParseResult();
-
-            if (commandLineParseResult.expandedArgs().isEmpty()) {
-                return usageHelp(commandLine);
-            }
-
             ExecutableCommand executableCommand = getExecutableCommandForParseResult(commandLineParseResult);
             if (executableCommand != null) {
+                if (commandLineParseResult.expandedArgs().isEmpty()) {
+                    if (executableCommand.executesWithoutArguments()) {
+                        return executableCommand.call();
+                    }
+                    return usageHelp(commandLine);
+                }
+
                 List<PositionalParameter> positionalParameters = executableCommand.getPositionalParameters();
                 List<PositionalParamSpec> matchedPositionalParameters = commandLineParseResult.matchedPositionals();
                 if (!positionalParameters.isEmpty() && !matchedPositionalParameters.isEmpty()) {

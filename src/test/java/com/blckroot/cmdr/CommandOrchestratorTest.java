@@ -1074,6 +1074,22 @@ void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_subcommand() throws Ex
     //  ***** Command Execution ****************************************************************************************
 
     @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_can_execute_without_arguments() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+        String expected = "Hello";
+        positionalParameter.setValue(expected);
+
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.executesWithoutArguments(true);
+        command.addPositionalParameter(positionalParameter);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{});
+
+        assertTrue(outContent.toString().contains(expected));
+    }
+
+    @Test
     void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_positional_parameter() throws Exception {
         PositionalParameter positionalParameter = new PositionalParameter("text", "");
         ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
@@ -1166,6 +1182,25 @@ void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_subcommand() throws Ex
 
         assertTrue(outContent.toString().contains(option.getLongestName()));
         assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_can_execute_without_arguments() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+        String expected = "Hello";
+        positionalParameter.setValue(expected);
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.executesWithoutArguments(true);
+        subcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName()});
+
+        assertTrue(outContent.toString().contains(expected));
     }
 
     @Test
@@ -1290,7 +1325,28 @@ void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_subcommand() throws Ex
         assertTrue(outContent.toString().contains(option.getLongestName()));
         assertTrue(outContent.toString().contains(value));
     }
-//    Nested Subcommand
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_can_execute_without_arguments() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+        String expected = "Hello";
+        positionalParameter.setValue(expected);
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.executesWithoutArguments(true);
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(outContent.toString().contains(expected));
+    }
+
     @Test
     void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_positional_parameter() throws Exception {
         PositionalParameter positionalParameter = new PositionalParameter("text", "");
