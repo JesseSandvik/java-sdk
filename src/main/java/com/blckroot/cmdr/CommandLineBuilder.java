@@ -1,4 +1,4 @@
-package com.blckroot.cmdr.command.chain;
+package com.blckroot.cmdr;
 
 import com.blckroot.cmd.command.ExecutableCommand;
 import com.blckroot.cmd.option.Option;

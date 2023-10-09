@@ -1,11 +1,11 @@
-package com.blckroot.cmdr.command.chain;
+package com.blckroot.cmdr;
 
 import com.blckroot.cmd.command.ExecutableCommand;
 
-class CommandChainUtility implements CommandChainContract {
+class CommandOrchestratorUtility implements CommandOrchestratorContract {
     private final ExecutableCommand parentCommand;
 
-    CommandChainUtility(ExecutableCommand parentCommand) {
+    CommandOrchestratorUtility(ExecutableCommand parentCommand) {
         this.parentCommand = parentCommand;
     }
 
