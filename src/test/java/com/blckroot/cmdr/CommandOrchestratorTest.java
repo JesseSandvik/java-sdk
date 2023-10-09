@@ -1,6 +1,7 @@
 package com.blckroot.cmdr;
 
 import com.blckroot.cmd.command.ExecutableCommand;
+import com.blckroot.cmd.option.Option;
 import com.blckroot.cmd.positionalParameter.PositionalParameter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -140,5 +141,98 @@ public class CommandOrchestratorTest {
         commandOrchestrator.execute(new String[]{"-h"});
 
         assertTrue(outContent.toString().contains(positionalParameter.getDescription()));
+    }
+
+    //  ***** Print Options ********************************************************************************************
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name_no_short() {
+        Option option = new Option("--optionA", "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description_no_short() {
+        Option option = new Option("--optionA", "Description for optionA.");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getDescription()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label_no_short() {
+        Option option = new Option("--optionA", "", "<labelA>");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getParameterLabel()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name() {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_short_name() {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getShortestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description() {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "Description for optionA.");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getDescription()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label() {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{"-h"});
+
+        assertTrue(outContent.toString().contains(option.getParameterLabel()));
     }
 }
