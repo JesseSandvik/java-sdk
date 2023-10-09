@@ -49,38 +49,46 @@ class CommandOrchestratorUtility implements CommandOrchestratorContract {
                 return usageHelp(commandLine);
             }
 
-//            Get the command
             ExecutableCommand executableCommand = getExecutableCommandForParseResult(commandLineParseResult);
-
-//            Set value of matched positional to command positional parameter
             if (executableCommand != null) {
-
                 List<PositionalParameter> positionalParameters = executableCommand.getPositionalParameters();
                 List<PositionalParamSpec> matchedPositionalParameters = commandLineParseResult.matchedPositionals();
                 if (!positionalParameters.isEmpty() && !matchedPositionalParameters.isEmpty()) {
-                    positionalParameters.forEach(positionalParameter -> {
-                        matchedPositionalParameters.forEach(matchedPositionalParameter -> {
-                            if (positionalParameter.getLabel().equalsIgnoreCase(matchedPositionalParameter.paramLabel())) {
-                                positionalParameter.setValue(matchedPositionalParameter.getValue());
-                            }
-                        });
-                    });
+                    setPositionalParameterValuesForMatchedPositionalParameters(
+                            positionalParameters, matchedPositionalParameters);
                 }
 
                 List<Option> options = executableCommand.getOptions();
                 List<OptionSpec> matchedOptions = commandLineParseResult.matchedOptions();
                 if (!options.isEmpty() && !matchedOptions.isEmpty()) {
-                    options.forEach(option -> {
-                        matchedOptions.forEach(matchedOption -> {
-                            if (option.getLongestName().equalsIgnoreCase(matchedOption.longestName())) {
-                                option.setValue(matchedOption.getValue());
-                            }
-                        });
-                    });
+                    setOptionValuesForMatchedOptions(options, matchedOptions);
                 }
             }
         }
         return 0;
+    }
+
+    private void setPositionalParameterValuesForMatchedPositionalParameters(
+            List<PositionalParameter> positionalParameters,
+            List<PositionalParamSpec> matchedPositionalParameters
+            ) {
+        positionalParameters.forEach(positionalParameter -> {
+            matchedPositionalParameters.forEach(matchedPositionalParameter -> {
+                if (positionalParameter.getLabel().equalsIgnoreCase(matchedPositionalParameter.paramLabel())) {
+                    positionalParameter.setValue(matchedPositionalParameter.getValue());
+                }
+            });
+        });
+    }
+
+    private void setOptionValuesForMatchedOptions(List<Option> options, List<OptionSpec> matchedOptions) {
+        options.forEach(option -> {
+            matchedOptions.forEach(matchedOption -> {
+                if (option.getLongestName().equalsIgnoreCase(matchedOption.longestName())) {
+                    option.setValue(matchedOption.getValue());
+                }
+            });
+        });
     }
 
     private ExecutableCommand getExecutableCommandForParseResult(ParseResult parseResult) {
