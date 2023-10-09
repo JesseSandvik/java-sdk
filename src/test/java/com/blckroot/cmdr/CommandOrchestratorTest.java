@@ -669,4 +669,108 @@ public class CommandOrchestratorTest {
 
         assertEquals(actual, expected);
     }
+
+    //  ***** Set Option Values ****************************************************************************************
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_parent_command() throws Exception {
+        Option option = new Option("--optionA", "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName()});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_label_parent_command() throws Exception {
+        Option option = new Option("--optionA", "", "<labelA>");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_no_label_parent_command() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getShortestName()});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_label_parent_command() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getShortestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_no_label_parent_command() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName()});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_label_parent_command() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addOption(option);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
 }
