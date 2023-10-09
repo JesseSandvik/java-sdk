@@ -115,7 +115,7 @@ class CommandLineBuilder {
             }
 
             CommandLineBuilder commandLineBuilder = new CommandLineBuilder(currentSubcommand);
-            commandLineBuilder.addStandardVersionHelp();
+            commandLineBuilder.addStandardUsageHelp();
 
             if (currentSubcommand.getVersion() != null) {
                 commandLineBuilder.addStandardVersionHelp();
