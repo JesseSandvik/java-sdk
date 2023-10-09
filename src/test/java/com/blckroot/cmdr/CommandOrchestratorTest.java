@@ -607,4 +607,66 @@ public class CommandOrchestratorTest {
 
         assertTrue(outContent.toString().contains(nestedSubcommand.getUsageDescriptionSynopsis()));
     }
+
+    //  ***** Set Positional Parameter Values **************************************************************************
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_POSITIONAL_PARAMETER_parent_command() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("labelA", "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addPositionalParameter(positionalParameter);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{expected});
+
+        Object actual = positionalParameter.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_POSITIONAL_PARAMETER_subcommand() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("labelA", "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), expected});
+
+        Object actual = positionalParameter.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_POSITIONAL_PARAMETER_nested_subcommand() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("labelA", "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{nestedSubcommand.getName(), expected});
+
+        Object actual = positionalParameter.getValue();
+
+        assertEquals(actual, expected);
+    }
 }
