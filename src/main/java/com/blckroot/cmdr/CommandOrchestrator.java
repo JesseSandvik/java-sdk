@@ -10,7 +10,7 @@ public class CommandOrchestrator implements CommandOrchestratorContract {
     }
 
     @Override
-    public Integer execute(String[] arguments) {
+    public Integer execute(String[] arguments) throws Exception {
         return this.commandChainUtility.execute(arguments);
     }
 }

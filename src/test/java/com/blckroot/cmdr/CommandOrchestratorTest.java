@@ -33,7 +33,18 @@ public class CommandOrchestratorTest {
     //  ***** Print Usage Help *****************************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_USAGE_HELP_standard_short_option() {
+    void COMMAND_ORCHESTRATOR_USAGE_HELP_no_arguments() throws Exception {
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{});
+
+        assertTrue(outContent.toString().contains(command.getName()));
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_USAGE_HELP_standard_short_option() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
         commandOrchestrator.execute(new String[]{"-h"});
@@ -44,7 +55,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_USAGE_HELP_standard_long_option() {
+    void COMMAND_ORCHESTRATOR_USAGE_HELP_standard_long_option() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
         commandOrchestrator.execute(new String[]{"--help"});
@@ -55,7 +66,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_USAGE_HELP_exit_code_success() {
+    void COMMAND_ORCHESTRATOR_USAGE_HELP_exit_code_success() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
         int expected = 0;
@@ -67,7 +78,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Version Help ***************************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_VERSION_HELP_option_not_present_for_command_without_version() {
+    void COMMAND_ORCHESTRATOR_VERSION_HELP_option_not_present_for_command_without_version() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
         commandOrchestrator.execute(new String[]{"-h"});
@@ -76,7 +87,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_VERSION_HELP_option_present_for_command_with_version() {
+    void COMMAND_ORCHESTRATOR_VERSION_HELP_option_present_for_command_with_version() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         command.setVersion("1.2.3");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
@@ -86,7 +97,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_VERSION_HELP_standard_short_option() {
+    void COMMAND_ORCHESTRATOR_VERSION_HELP_standard_short_option() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         command.setVersion("1.2.3");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
@@ -96,7 +107,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_VERSION_HELP_standard_long_option() {
+    void COMMAND_ORCHESTRATOR_VERSION_HELP_standard_long_option() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         command.setVersion("1.2.3");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
@@ -106,7 +117,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_VERSION_HELP_exit_code_success() {
+    void COMMAND_ORCHESTRATOR_VERSION_HELP_exit_code_success() throws Exception {
         ExecutableCommand command = new ExecutableCommand("test", "");
         command.setVersion("1.2.3");
         CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
@@ -119,7 +130,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Positional Parameters ******************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_POSITIONAL_PARAMETERS_usage_help_label() {
+    void COMMAND_ORCHESTRATOR_POSITIONAL_PARAMETERS_usage_help_label() throws Exception {
         PositionalParameter positionalParameter = new PositionalParameter("labelA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -132,7 +143,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_POSITIONAL_PARAMETERS_usage_help_description() {
+    void COMMAND_ORCHESTRATOR_POSITIONAL_PARAMETERS_usage_help_description() throws Exception {
         PositionalParameter positionalParameter =
                 new PositionalParameter("", "Positional parameter description.");
 
@@ -148,7 +159,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Options ********************************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name_no_short() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name_no_short() throws Exception {
         Option option = new Option("--optionA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -161,7 +172,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description_no_short() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description_no_short() throws Exception {
         Option option = new Option("--optionA", "Description for optionA.");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -174,7 +185,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label_no_short() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label_no_short() throws Exception {
         Option option = new Option("--optionA", "", "<labelA>");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -187,7 +198,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_long_name() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -200,7 +211,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_short_name() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_short_name() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -213,7 +224,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_description() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "Description for optionA.");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -226,7 +237,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label() {
+    void COMMAND_ORCHESTRATOR_OPTIONS_usage_help_label() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -241,7 +252,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Subcommands ****************************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_usage_help_name() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_usage_help_name() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -254,7 +265,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_usage_help_synopsis() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_usage_help_synopsis() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
         subcommand.setUsageDescriptionSynopsis("subA synopsis.");
 
@@ -270,7 +281,22 @@ public class CommandOrchestratorTest {
     //  ***** Print Subcommand Usage Help ******************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_standard_short_option() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_no_arguments() throws Exception {
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName()});
+
+        assertTrue(outContent.toString().contains(subcommand.getName()));
+        assertTrue(outContent.toString().contains("-h"));
+        assertTrue(outContent.toString().contains("--help"));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_standard_short_option() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -285,7 +311,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_standard_long_option() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_standard_long_option() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -300,7 +326,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_exit_code_success() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_USAGE_HELP_exit_code_success() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -318,7 +344,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Subcommand Version Help ****************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_option_not_present_for_command_without_version() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_option_not_present_for_command_without_version() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
 
         ExecutableCommand command = new ExecutableCommand("test", "");
@@ -332,7 +358,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_option_present_for_command_with_version() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_option_present_for_command_with_version() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
         subcommand.setVersion("5.6.7");
 
@@ -347,7 +373,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_standard_short_option() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_standard_short_option() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
         subcommand.setVersion("5.6.7");
 
@@ -361,7 +387,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_standard_long_option() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_standard_long_option() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
         subcommand.setVersion("5.6.7");
 
@@ -375,7 +401,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_exit_code_success() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_VERSION_HELP_exit_code_success() throws Exception {
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
         subcommand.setVersion("5.6.7");
 
@@ -394,7 +420,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Subcommand Positional Parameters *******************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_POSITIONAL_PARAMETERS_usage_help_label() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_POSITIONAL_PARAMETERS_usage_help_label() throws Exception {
         PositionalParameter positionalParameter = new PositionalParameter("labelA", "");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -410,7 +436,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_POSITIONAL_PARAMETERS_usage_help_description() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_POSITIONAL_PARAMETERS_usage_help_description() throws Exception {
         PositionalParameter positionalParameter =
                 new PositionalParameter("", "Positional parameter description.");
 
@@ -429,7 +455,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Subcommand Options *********************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_long_name_no_short() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_long_name_no_short() throws Exception {
         Option option = new Option("--optionA", "");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -446,7 +472,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_description_no_short() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_description_no_short() throws Exception {
         Option option = new Option("--optionA", "Description for optionA.");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -463,7 +489,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_label_no_short() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_label_no_short() throws Exception {
         Option option = new Option("--optionA", "", "<labelA>");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -480,7 +506,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_long_name() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_long_name() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -497,7 +523,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_short_name() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_short_name() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -514,7 +540,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_description() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_description() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "Description for optionA.");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -531,7 +557,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_label() {
+    void COMMAND_ORCHESTRATOR_SUBCOMMANDS_OPTIONS_usage_help_label() throws Exception {
         Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -550,7 +576,7 @@ public class CommandOrchestratorTest {
     //  ***** Print Nested Subcommands *********************************************************************************
 
     @Test
-    void COMMAND_ORCHESTRATOR_NESTED_SUBCOMMANDS_usage_help_name() {
+    void COMMAND_ORCHESTRATOR_NESTED_SUBCOMMANDS_usage_help_name() throws Exception {
         ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
 
         ExecutableCommand subcommand = new ExecutableCommand("subA", "");
@@ -566,7 +592,7 @@ public class CommandOrchestratorTest {
     }
 
     @Test
-    void COMMAND_ORCHESTRATOR_NESTED_SUBCOMMANDS_usage_help_synopsis() {
+    void COMMAND_ORCHESTRATOR_NESTED_SUBCOMMANDS_usage_help_synopsis() throws Exception {
         ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
         nestedSubcommand.setUsageDescriptionSynopsis("nestedSubA synopsis.");
 
