@@ -773,4 +773,301 @@ public class CommandOrchestratorTest {
 
         assertEquals(actual, expected);
     }
+
+@Test
+void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_subcommand() throws Exception {
+    Option option = new Option("--optionA", "");
+
+    ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+    subcommand.addOption(option);
+
+    ExecutableCommand command = new ExecutableCommand("test", "");
+    command.addExecutableSubcommand(subcommand);
+
+    boolean expected = true;
+
+    CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+    commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName()});
+
+    Object actual = option.getValue();
+
+    assertEquals(actual, expected);
+}
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_label_subcommand() throws Exception {
+        Option option = new Option("--optionA", "", "<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_no_label_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getShortestName()});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_label_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getShortestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_no_label_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName()});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_label_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName(), expected});
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_nested_subcommand() throws Exception {
+        Option option = new Option("--optionA", "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName()
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_label_nested_subcommand() throws Exception {
+        Option option = new Option("--optionA", "", "<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName(),
+                        expected
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_no_label_nested_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getShortestName()
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_short_label_nested_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getShortestName(),
+                        expected
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_no_label_nested_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        boolean expected = true;
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName()
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_VALUES_OPTION_long_label_nested_subcommand() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("nestedSubA", "");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName(),
+                        expected
+                }
+        );
+
+        Object actual = option.getValue();
+
+        assertEquals(actual, expected);
+    }
 }

@@ -1,6 +1,7 @@
 package com.blckroot.cmdr;
 
 import com.blckroot.cmd.command.ExecutableCommand;
+import com.blckroot.cmd.option.Option;
 import com.blckroot.cmd.positionalParameter.PositionalParameter;
 import picocli.CommandLine;
 import picocli.CommandLine.ParseResult;
@@ -53,6 +54,7 @@ class CommandOrchestratorUtility implements CommandOrchestratorContract {
 
 //            Set value of matched positional to command positional parameter
             if (executableCommand != null) {
+
                 List<PositionalParameter> positionalParameters = executableCommand.getPositionalParameters();
                 List<PositionalParamSpec> matchedPositionalParameters = commandLineParseResult.matchedPositionals();
                 if (!positionalParameters.isEmpty() && !matchedPositionalParameters.isEmpty()) {
@@ -60,6 +62,18 @@ class CommandOrchestratorUtility implements CommandOrchestratorContract {
                         matchedPositionalParameters.forEach(matchedPositionalParameter -> {
                             if (positionalParameter.getLabel().equalsIgnoreCase(matchedPositionalParameter.paramLabel())) {
                                 positionalParameter.setValue(matchedPositionalParameter.getValue());
+                            }
+                        });
+                    });
+                }
+
+                List<Option> options = executableCommand.getOptions();
+                List<OptionSpec> matchedOptions = commandLineParseResult.matchedOptions();
+                if (!options.isEmpty() && !matchedOptions.isEmpty()) {
+                    options.forEach(option -> {
+                        matchedOptions.forEach(matchedOption -> {
+                            if (option.getLongestName().equalsIgnoreCase(matchedOption.longestName())) {
+                                option.setValue(matchedOption.getValue());
                             }
                         });
                     });
