@@ -1070,4 +1070,413 @@ void COMMAND_ORCHESTRATOR_VALUES_OPTION_no_short_no_label_subcommand() throws Ex
 
         assertEquals(actual, expected);
     }
+
+    //  ***** Command Execution ****************************************************************************************
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_positional_parameter() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addPositionalParameter(positionalParameter);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{expected});
+
+        assertTrue(outContent.toString().contains(expected));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_no_short_no_label() throws Exception {
+        Option option = new Option("--optionA", "");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_no_short_label() throws Exception {
+        Option option = new Option("--optionA", "","<labelA>");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_short_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getShortestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_short_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getShortestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_long_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_parent_command_option_long_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+        ExecutableCommand command = new ExecutableCommand("echo", "src/test/resources/echo");
+        command.addOption(option);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{option.getLongestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_positional_parameter() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), expected});
+
+        assertTrue(outContent.toString().contains(expected));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_no_short_no_label() throws Exception {
+        Option option = new Option("--optionA", "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_no_short_label() throws Exception {
+        Option option = new Option("--optionA", "","<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_short_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getShortestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_short_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getShortestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_long_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName()});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_subcommand_option_long_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand subcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        subcommand.addOption(option);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(new String[]{subcommand.getName(), option.getLongestName(), value});
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+//    Nested Subcommand
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_positional_parameter() throws Exception {
+        PositionalParameter positionalParameter = new PositionalParameter("text", "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String expected = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        expected
+                }
+        );
+
+        assertTrue(outContent.toString().contains(expected));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_no_short_no_label() throws Exception {
+        Option option = new Option("--optionA", "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName()
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_no_short_label() throws Exception {
+        Option option = new Option("--optionA", "","<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName(),
+                        value
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_short_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getShortestName()
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_short_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getShortestName(),
+                        value
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_long_no_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName()
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+    }
+
+    @Test
+    void COMMAND_ORCHESTRATOR_COMMAND_EXECUTION_nested_subcommand_option_long_label() throws Exception {
+        Option option = new Option(new String[]{"--optionA", "-a"}, "", "<labelA>");
+
+        ExecutableCommand nestedSubcommand = new ExecutableCommand("echo", "src/test/resources/echo");
+        nestedSubcommand.addOption(option);
+
+        ExecutableCommand subcommand = new ExecutableCommand("subA", "");
+        subcommand.addExecutableSubcommand(nestedSubcommand);
+
+        ExecutableCommand command = new ExecutableCommand("test", "");
+        command.addExecutableSubcommand(subcommand);
+
+        String value = "Hello";
+
+        CommandOrchestrator commandOrchestrator = new CommandOrchestrator(command);
+        commandOrchestrator.execute(
+                new String[]{
+                        subcommand.getName(),
+                        nestedSubcommand.getName(),
+                        option.getLongestName(),
+                        value
+                }
+        );
+
+        assertTrue(outContent.toString().contains(option.getLongestName()));
+        assertTrue(outContent.toString().contains(value));
+    }
 }

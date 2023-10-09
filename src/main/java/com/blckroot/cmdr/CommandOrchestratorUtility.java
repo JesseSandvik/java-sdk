@@ -63,6 +63,10 @@ class CommandOrchestratorUtility implements CommandOrchestratorContract {
                 if (!options.isEmpty() && !matchedOptions.isEmpty()) {
                     setOptionValuesForMatchedOptions(options, matchedOptions);
                 }
+
+                if (commandLineQueue.isEmpty()) {
+                    return executableCommand.call();
+                }
             }
         }
         return 0;
