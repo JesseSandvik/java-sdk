@@ -4,18 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.blckroot.cmdr</groupId>
-    <artifactId>com-blckroot-cmdr</artifactId>
+    <groupId>com.blckroot</groupId>
+    <artifactId>com.blckroot</artifactId>
     <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>sdk</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Third Party Dependencies -->
         <picocli.version>4.7.5</picocli.version>
-        <junit.version>5.10.0</junit.version>
-        <jacoco.version>0.8.10</jacoco.version>
+        <junit.version>5.10.1</junit.version>
+        <jacoco.version>0.8.11</jacoco.version>
     </properties>
 
     <build>
@@ -39,31 +45,27 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.blckroot.cmd</groupId>
-            <artifactId>com-blckroot-cmd</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>${picocli.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
