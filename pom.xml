@@ -11,6 +11,7 @@
 
     <modules>
         <module>sdk</module>
+        <module>sdk/logger</module>
     </modules>
 
     <properties>
@@ -19,9 +20,10 @@
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Third Party Dependencies -->
-        <picocli.version>4.7.5</picocli.version>
-        <junit.version>5.10.1</junit.version>
         <jacoco.version>0.8.11</jacoco.version>
+        <junit.version>5.10.1</junit.version>
+        <log4j.version>3.0.0-alpha1</log4j.version>
+        <picocli.version>4.7.5</picocli.version>
     </properties>
 
     <build>
@@ -51,11 +53,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>info.picocli</groupId>
-                <artifactId>picocli</artifactId>
-                <version>${picocli.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.version}</version>
@@ -64,6 +61,21 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>info.picocli</groupId>
+                <artifactId>picocli</artifactId>
+                <version>${picocli.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
