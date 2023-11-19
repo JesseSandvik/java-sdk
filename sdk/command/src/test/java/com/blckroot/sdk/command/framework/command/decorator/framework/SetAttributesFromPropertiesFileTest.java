@@ -337,4 +337,18 @@ public class SetAttributesFromPropertiesFileTest {
         boolean actual = (boolean) !command.getOptions().get(1).getValue().toString().isBlank();
         assertEquals(expected, actual);
     }
+
+    // Framework Command Subcommands
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__subcommands() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        int expected = properties.getProperty("subcommands").split(",").length;
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        int actual = command.getFrameworkSubcommands().size();
+    }
 }
