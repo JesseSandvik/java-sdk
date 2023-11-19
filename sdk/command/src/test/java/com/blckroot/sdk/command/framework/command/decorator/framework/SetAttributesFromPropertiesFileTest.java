@@ -272,4 +272,69 @@ public class SetAttributesFromPropertiesFileTest {
         String actual = command.getOptions().get(0).getValue().toString();
         assertEquals(expected, actual);
     }
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__option_long_name__second_index() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        String expected = properties.getProperty("2.option.long.name");
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        String actual = command.getOptions().get(1).getLongName();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__option_short_name__second_index() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        String expected = properties.getProperty("2.option.short.name");
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        String actual = command.getOptions().get(1).getShortName();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__option_synopsis__second_index() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        String expected = properties.getProperty("2.option.synopsis");
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        String actual = command.getOptions().get(1).getSynopsis();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__option_label__second_index() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        String expected = properties.getProperty("2.option.label");
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        String actual = command.getOptions().get(1).getLabel();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__option_value__boolean__second_index() throws Exception {
+        FileSystemService fileSystemService = new FileSystemService();
+        Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
+        boolean expected = Boolean.parseBoolean(properties.getProperty("2.option.value"));
+
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        boolean actual = (boolean) !command.getOptions().get(1).getValue().toString().isBlank();
+        assertEquals(expected, actual);
+    }
 }
