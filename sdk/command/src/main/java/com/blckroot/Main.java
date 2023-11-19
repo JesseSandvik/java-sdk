@@ -8,9 +8,8 @@ public class Main {
         FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(new TestCommand(), "sdk/command/src/test/resources/");
         int exitCode = command.call();
 
-        System.out.println(command.getVersion());
-        System.out.println(command.getSynopsis());
-        System.out.println(command.getDescription());
+        System.out.println(command.getProperties().getProperty("1.positional.parameter.label"));
+        System.out.println(command.getPositionalParameters().get(0).getLabel());
         System.exit(exitCode);
     }
 }

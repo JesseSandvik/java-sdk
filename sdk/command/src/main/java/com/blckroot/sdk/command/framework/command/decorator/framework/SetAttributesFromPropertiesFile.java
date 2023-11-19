@@ -42,7 +42,7 @@ public class SetAttributesFromPropertiesFile extends FrameworkCommandDecorator {
         LOGGER.log(DEBUG, "positional parameters found for framework command: " +
                 frameworkBaseCommand.getName());
         int index = 1;
-        while (index < positionalParameterCount) {
+        while (index <= positionalParameterCount) {
             final String POSITIONAL_PARAMETER_LABEL_KEY = getFormattedKey(index, "positional.parameter.label");
             final String POSITIONAL_PARAMETER_SYNOPSIS_kEY = getFormattedKey(index, "positional.parameter.synopsis");
             final String POSITIONAL_PARAMETER_VALUE_KEY = getFormattedKey(index, "positional.parameter.value");
@@ -87,7 +87,7 @@ public class SetAttributesFromPropertiesFile extends FrameworkCommandDecorator {
         LOGGER.log(DEBUG, "options found for framework command: " + frameworkBaseCommand.getName());
 
         int index = 1;
-        while (index < optionCount) {
+        while (index <= optionCount) {
             final String OPTION_LONG_NAME_KEY = getFormattedKey(index, "option.long.name");
             final String OPTION_SHORT_NAME_KEY = getFormattedKey(index, "option.short.name");
             final String OPTION_SYNOPSIS_KEY = getFormattedKey(index, "option.synopsis");
