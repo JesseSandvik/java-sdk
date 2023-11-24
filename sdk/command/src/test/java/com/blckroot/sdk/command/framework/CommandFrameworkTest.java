@@ -580,4 +580,67 @@ public class CommandFrameworkTest {
         int actual = commandFramework.execute(new String[]{"--version"});
         assertTrue(out.toString().contains(frameworkBaseCommandVersion));
     }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__positional_parameter() {
+        String expected = "first positional parameter value";
+        frameworkBaseCommand.addPositionalParameter(getPositionalParameter());
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{expected});
+
+        String actual = frameworkBaseCommand.getPositionalParameters().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__long_name__boolean() {
+        boolean expected = true;
+        Option option = getOption();
+        frameworkBaseCommand.addOption(option);
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{option.getLongName()});
+
+        boolean actual = (boolean) frameworkBaseCommand.getOptions().get(0).getValue();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__short_name__boolean() {
+        boolean expected = true;
+        Option option = getOption();
+        addOptionShortName(option);
+        frameworkBaseCommand.addOption(option);
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{option.getShortName()});
+
+        boolean actual = (boolean) frameworkBaseCommand.getOptions().get(0).getValue();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__long_name__string() {
+        String expected = "option value";
+        Option option = getOption();
+        addOptionLabel(option);
+        frameworkBaseCommand.addOption(option);
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{option.getLongName(), expected});
+
+        String actual = frameworkBaseCommand.getOptions().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__short_name__string() {
+        String expected = "option value";
+        Option option = getOption();
+        addOptionShortName(option);
+        addOptionLabel(option);
+        frameworkBaseCommand.addOption(option);
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{option.getShortName(), expected});
+
+        String actual = frameworkBaseCommand.getOptions().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
 }
