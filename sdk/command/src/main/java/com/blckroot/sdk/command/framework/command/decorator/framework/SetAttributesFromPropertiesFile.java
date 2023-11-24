@@ -143,7 +143,6 @@ public class SetAttributesFromPropertiesFile extends FrameworkCommandDecorator {
             LOGGER.log(DEBUG, "creating subcommand: " + subcommandName);
             FrameworkBaseCommand subcommand =
                     new SetAttributesFromPropertiesFile(new FrameworkCommand(subcommandName), propertiesFileDirectory);
-            setAttributes(subcommand);
             frameworkBaseCommand.addFrameworkSubcommand(subcommand);
         }
     }
