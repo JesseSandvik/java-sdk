@@ -65,6 +65,12 @@ public class CommandFrameworkTest {
         return subcommand;
     }
 
+    FrameworkBaseCommand getNestedSubcommand() {
+        FrameworkBaseCommand subcommand = new FrameworkCommand("subtestB");
+        subcommand.setSynopsis("subtestB synopsis");
+        return subcommand;
+    }
+
     @Test
     void COMMAND_FRAMEWORK__usage_help__short_option__exit_code__success() {
         int expected = 0;
@@ -965,6 +971,104 @@ public class CommandFrameworkTest {
         commandFramework.execute(new String[]{subcommand.getName(), option.getShortName(), expected});
 
         String actual = subcommand.getOptions().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__positional_parameter__nested_subcommand() {
+        String expected = "first positional parameter value";
+
+        FrameworkBaseCommand nestedSubcommand = getNestedSubcommand();
+        nestedSubcommand.addPositionalParameter(getPositionalParameter());
+
+        FrameworkBaseCommand subcommand = getSubcommand();
+        subcommand.addFrameworkSubcommand(nestedSubcommand);
+        frameworkBaseCommand.addFrameworkSubcommand(subcommand);
+
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), expected});
+
+        String actual = nestedSubcommand.getPositionalParameters().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__long_name__boolean__nested_subcommand() {
+        boolean expected = true;
+
+        FrameworkBaseCommand nestedSubcommand = getNestedSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+
+        FrameworkBaseCommand subcommand = getSubcommand();
+        subcommand.addFrameworkSubcommand(nestedSubcommand);
+        frameworkBaseCommand.addFrameworkSubcommand(subcommand);
+
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), option.getLongName()});
+
+        boolean actual = (boolean) nestedSubcommand.getOptions().get(0).getValue();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__short_name__boolean__nested_subcommand() {
+        boolean expected = true;
+
+        FrameworkBaseCommand nestedSubcommand = getNestedSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        nestedSubcommand.addOption(option);
+
+        FrameworkBaseCommand subcommand = getSubcommand();
+        subcommand.addFrameworkSubcommand(nestedSubcommand);
+        frameworkBaseCommand.addFrameworkSubcommand(subcommand);
+
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), option.getShortName()});
+
+        boolean actual = (boolean) nestedSubcommand.getOptions().get(0).getValue();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__long_name__string__nested_subcommand() {
+        String expected = "option value";
+
+        FrameworkBaseCommand nestedSubcommand = getNestedSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        nestedSubcommand.addOption(option);
+
+        FrameworkBaseCommand subcommand = getSubcommand();
+        subcommand.addFrameworkSubcommand(nestedSubcommand);
+        frameworkBaseCommand.addFrameworkSubcommand(subcommand);
+
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), option.getLongName(), expected});
+
+        String actual = nestedSubcommand.getOptions().get(0).getValue().toString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void COMMAND_FRAMEWORK__parse__option__short_name__string__nested_subcommand() {
+        String expected = "option value";
+
+        FrameworkBaseCommand nestedSubcommand = getNestedSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        addOptionLabel(option);
+        nestedSubcommand.addOption(option);
+
+        FrameworkBaseCommand subcommand = getSubcommand();
+        subcommand.addFrameworkSubcommand(nestedSubcommand);
+        frameworkBaseCommand.addFrameworkSubcommand(subcommand);
+
+        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
+        commandFramework.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), option.getShortName(), expected});
+
+        String actual = nestedSubcommand.getOptions().get(0).getValue().toString();
         assertEquals(expected, actual);
     }
 }
