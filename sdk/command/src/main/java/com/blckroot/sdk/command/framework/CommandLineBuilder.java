@@ -51,7 +51,7 @@ class CommandLineBuilder {
         return this;
     }
 
-    public CommandLineBuilder addPositionalParameter(CommandSpec commandSpec, PositionalParameter positionalParameter) {
+    public CommandLineBuilder addPositionalParameter(PositionalParameter positionalParameter) {
         if (positionalParameter.getLabel() != null && positionalParameter.getSynopsis() != null) {
             commandSpec.addPositional(PositionalParamSpec
                     .builder()
@@ -62,7 +62,7 @@ class CommandLineBuilder {
         return this;
     }
 
-    public CommandLineBuilder addOption(CommandSpec commandSpec, Option option) {
+    public CommandLineBuilder addOption(Option option) {
         if (option.getLongName() != null && option.getSynopsis() != null) {
             OptionSpec.Builder optionSpecBuilder = null;
             if (option.getShortName() != null) {
@@ -85,7 +85,7 @@ class CommandLineBuilder {
         return this;
     }
 
-    public CommandLineBuilder addSubcommand(CommandSpec commandSpec, FrameworkBaseCommand frameworkBaseCommand) {
+    public CommandLineBuilder addSubcommand(FrameworkBaseCommand frameworkBaseCommand) {
         commandSpec.addSubcommand(frameworkBaseCommand.getName(), new CommandLineBuilder(frameworkBaseCommand).build());
         return this;
     }
@@ -95,21 +95,22 @@ class CommandLineBuilder {
         addStandardUsageHelpOption(commandSpec);
 
         if (frameworkBaseCommand.getVersion() != null) {
+            commandSpec.version(frameworkBaseCommand.getVersion());
             addStandardVersionHelpOption(commandSpec);
         }
 
         if (!frameworkBaseCommand.getPositionalParameters().isEmpty()) {
             frameworkBaseCommand.getPositionalParameters()
-                    .forEach(positionalParameter -> addPositionalParameter(commandSpec, positionalParameter));
+                    .forEach(positionalParameter -> addPositionalParameter(positionalParameter));
         }
 
         if (!frameworkBaseCommand.getOptions().isEmpty()) {
-            frameworkBaseCommand.getOptions().forEach(option -> addOption(commandSpec, option));
+            frameworkBaseCommand.getOptions().forEach(option -> addOption(option));
         }
 
         if (!frameworkBaseCommand.getFrameworkSubcommands().isEmpty()) {
             frameworkBaseCommand.getFrameworkSubcommands()
-                    .forEach(frameworkBaseSubcommand -> addSubcommand(commandSpec, frameworkBaseSubcommand));
+                    .forEach(frameworkBaseSubcommand -> addSubcommand(frameworkBaseSubcommand));
         }
 
         return new CommandLine(commandSpec);
