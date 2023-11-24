@@ -48,6 +48,14 @@ public class SetAttributesFromPropertiesFileTest {
     }
 
     @Test
+    void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__properties() throws Exception {
+        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
+                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        command.call();
+        assertNotNull(command.getProperties());
+    }
+
+    @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__version() throws Exception {
         FileSystemService fileSystemService = new FileSystemService();
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);

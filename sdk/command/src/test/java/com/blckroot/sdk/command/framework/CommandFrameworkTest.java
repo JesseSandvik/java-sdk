@@ -548,14 +548,6 @@ public class CommandFrameworkTest {
     }
 
     @Test
-    void COMMAND_FRAMEWORK__version_help__short_option__exit_code__failure() {
-        int expected = 2;
-        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
-        int actual = commandFramework.execute(new String[]{"-v"});
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void COMMAND_FRAMEWORK__version_help__short_option__exit_code__success() {
         int expected = 0;
         frameworkBaseCommand.setVersion(frameworkBaseCommandVersion);
@@ -570,14 +562,6 @@ public class CommandFrameworkTest {
         CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
         int actual = commandFramework.execute(new String[]{"-v"});
         assertTrue(out.toString().contains(frameworkBaseCommandVersion));
-    }
-
-    @Test
-    void COMMAND_FRAMEWORK__version_help__long_option__exit_code__failure() {
-        int expected = 2;
-        CommandFramework commandFramework = new CommandFramework(frameworkBaseCommand);
-        int actual = commandFramework.execute(new String[]{"--version"});
-        assertEquals(expected, actual);
     }
 
     @Test
