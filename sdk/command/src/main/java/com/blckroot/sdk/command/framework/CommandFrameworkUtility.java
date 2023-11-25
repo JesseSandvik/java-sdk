@@ -52,9 +52,9 @@ class CommandFrameworkUtility implements CommandFrameworkContract {
     @Override
     public Integer execute(String[] arguments) {
         CommandLine commandLine = new CommandLineBuilder(frameworkBaseCommand).build();
-        ParseResult parseResult = commandLine.parseArgs(arguments);
 
         try {
+            ParseResult parseResult = commandLine.parseArgs(arguments);
             Queue<CommandLine> commandLineQueue = new ArrayDeque<>(parseResult.asCommandLineList());
             while (!commandLineQueue.isEmpty()) {
                 CommandLine currentCommandLine = commandLineQueue.remove();
