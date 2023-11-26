@@ -38,6 +38,7 @@ class CommandLineBuilder {
     public CommandLineBuilder addStandardUsageHelpOption() {
         commandSpec.addOption(OptionSpec
                 .builder("-h", "--help")
+                .description("Show this help message and exit.")
                 .usageHelp(true)
                 .build());
         return this;
@@ -46,6 +47,7 @@ class CommandLineBuilder {
     public CommandLineBuilder addStandardVersionHelpOption() {
         commandSpec.addOption(OptionSpec
                 .builder("-v", "--version")
+                .description("Print version information and exit.")
                 .versionHelp(true)
                 .build());
         return this;

@@ -5,14 +5,16 @@ import com.blckroot.sdk.command.CallableCommand;
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.decorator.ExecuteCommandAsPlugin;
 import com.blckroot.sdk.command.decorator.SetAttributesFromPropertiesFile;
-import com.blckroot.sdk.command.line.decorator.ParseCommandLine;
+import com.blckroot.sdk.command.line.decorator.FormattedIOCommandLine;
+import com.blckroot.sdk.command.line.decorator.InteractiveUnmatchedParameterErrorHandler;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String propertiesFileDirectory = "sdk/command-line/src/test/resources/";
         Command command = new SetAttributesFromPropertiesFile(new ExecuteCommandAsPlugin(new CallableCommand("test")), propertiesFileDirectory);
-        CommandLine parseCommandLine = new ParseCommandLine(new CommandLineCore(command));
-        int exitCode = parseCommandLine.execute(args);
+        CommandLine commandLine = new InteractiveUnmatchedParameterErrorHandler(new FormattedIOCommandLine(new CommandLineCore(command)));
+
+        int exitCode = commandLine.execute(args);
         System.exit(exitCode);
     }
 }

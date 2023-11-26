@@ -4,11 +4,11 @@ import com.blckroot.sdk.command.Command;
 
 public class CommandLineCore implements CommandLine {
     private final Command rootCommand;
-    private final picocli.CommandLine commandLine;
+    private final picocli.CommandLine picocliCommandLine;
 
     public CommandLineCore(Command rootCommand) {
         this.rootCommand = rootCommand;
-        this.commandLine = buildCommandLine(rootCommand);
+        this.picocliCommandLine = buildCommandLine(rootCommand);
     }
 
     @Override
@@ -17,8 +17,8 @@ public class CommandLineCore implements CommandLine {
     }
 
     @Override
-    public picocli.CommandLine getCommandLine() {
-        return commandLine;
+    public picocli.CommandLine getPicocliCommandLine() {
+        return picocliCommandLine;
     }
 
     private picocli.CommandLine buildCommandLine(Command command) {
@@ -46,7 +46,8 @@ public class CommandLineCore implements CommandLine {
     }
 
     @Override
-    public Integer execute(String[] arguments) {
+    public Integer execute(String[] arguments) throws Exception {
+        System.out.println("> Command Line Core Triggered.");
         return 0;
     }
 }

@@ -4,26 +4,24 @@ import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.line.CommandLine;
 
 abstract class CommandLineDecorator implements CommandLine {
-    protected final CommandLine commandOrchestrator;
-    private Command rootCommand;
-    private picocli.CommandLine commandLine;
+    protected final CommandLine commandLine;
 
-    CommandLineDecorator(CommandLine commandOrchestrator) {
-        this.commandOrchestrator = commandOrchestrator;
+    CommandLineDecorator(CommandLine commandLine) {
+        this.commandLine = commandLine;
     }
 
     @Override
     public Command getRootCommand() {
-        return rootCommand;
+        return commandLine.getRootCommand();
     }
 
     @Override
-    public picocli.CommandLine getCommandLine() {
-        return commandLine;
+    public picocli.CommandLine getPicocliCommandLine() {
+        return commandLine.getPicocliCommandLine();
     }
 
     @Override
-    public Integer execute(String[] arguments) {
-        return commandOrchestrator.execute(arguments);
+    public Integer execute(String[] arguments) throws Exception {
+        return commandLine.execute(arguments);
     }
 }
