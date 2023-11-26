@@ -1,7 +1,7 @@
-package com.blckroot.sdk.command.framework.command.decorator.framework;
+package com.blckroot.sdk.command.decorator;
 
-import com.blckroot.sdk.command.framework.command.FrameworkBaseCommand;
-import com.blckroot.sdk.command.framework.command.FrameworkCommand;
+import com.blckroot.sdk.command.CallableCommand;
+import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.file.system.service.FileSystemService;
 import org.junit.jupiter.api.Test;
 
@@ -17,40 +17,40 @@ public class SetAttributesFromPropertiesFileTest {
 
     @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__null() throws Exception {
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), null);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), null);
         command.call();
         assertNull(command.getProperties());
     }
 
     @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__empty() throws Exception {
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), "");
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), "");
         command.call();
         assertNull(command.getProperties());
     }
 
     @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__blank() throws Exception {
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), "   ");
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), "   ");
         command.call();
         assertNull(command.getProperties());
     }
 
     @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__invalid() throws Exception {
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), "src/test/");
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), "src/test/");
         command.call();
         assertNull(command.getProperties());
     }
 
     @Test
     void SET_ATTRIBUTES_FROM_PROPERTIES_FILE__valid__properties() throws Exception {
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         assertNotNull(command.getProperties());
     }
@@ -61,8 +61,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("version");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
 
         String actual = command.getVersion();
@@ -75,8 +75,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("synopsis");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getSynopsis();
         assertEquals(expected, actual);
@@ -88,8 +88,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("description");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getDescription();
         assertEquals(expected, actual);
@@ -101,8 +101,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         boolean expected = Boolean.parseBoolean(properties.getProperty("executes.without.arguments"));
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         boolean actual = command.isExecutesWithoutArguments();
         assertEquals(expected, actual);
@@ -116,8 +116,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         int expected = Integer.parseInt(properties.getProperty("positional.parameter.count"));
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         int actual = command.getPositionalParameters().size();
         assertEquals(expected, actual);
@@ -129,8 +129,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.positional.parameter.label");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getPositionalParameters().get(0).getLabel();
         assertEquals(expected, actual);
@@ -142,8 +142,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.positional.parameter.synopsis");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getPositionalParameters().get(0).getSynopsis();
         assertEquals(expected, actual);
@@ -155,8 +155,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.positional.parameter.value");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = (String) command.getPositionalParameters().get(0).getValue();
         assertEquals(expected, actual);
@@ -168,8 +168,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.positional.parameter.label");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getPositionalParameters().get(1).getLabel();
         assertEquals(expected, actual);
@@ -181,8 +181,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.positional.parameter.synopsis");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getPositionalParameters().get(1).getSynopsis();
         assertEquals(expected, actual);
@@ -194,8 +194,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         boolean expected = Boolean.parseBoolean(properties.getProperty("2.positional.parameter.value"));
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         boolean actual = !command.getPositionalParameters().get(1).getValue().toString().isBlank();
         assertEquals(expected, actual);
@@ -209,8 +209,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         int expected = Integer.parseInt(properties.getProperty("option.count"));
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         int actual = command.getOptions().size();
         assertEquals(expected, actual);
@@ -222,8 +222,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.option.long.name");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(0).getLongName();
         assertEquals(expected, actual);
@@ -235,8 +235,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.option.short.name");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(0).getShortName();
         assertEquals(expected, actual);
@@ -248,8 +248,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.option.synopsis");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(0).getSynopsis();
         assertEquals(expected, actual);
@@ -261,8 +261,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.option.label");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(0).getLabel();
         assertEquals(expected, actual);
@@ -274,8 +274,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("1.option.value");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(0).getValue().toString();
         assertEquals(expected, actual);
@@ -287,8 +287,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.option.long.name");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(1).getLongName();
         assertEquals(expected, actual);
@@ -300,8 +300,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.option.short.name");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(1).getShortName();
         assertEquals(expected, actual);
@@ -313,8 +313,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.option.synopsis");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(1).getSynopsis();
         assertEquals(expected, actual);
@@ -326,8 +326,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         String expected = properties.getProperty("2.option.label");
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         String actual = command.getOptions().get(1).getLabel();
         assertEquals(expected, actual);
@@ -339,8 +339,8 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         boolean expected = Boolean.parseBoolean(properties.getProperty("2.option.value"));
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
         boolean actual = (boolean) !command.getOptions().get(1).getValue().toString().isBlank();
         assertEquals(expected, actual);
@@ -354,9 +354,9 @@ public class SetAttributesFromPropertiesFileTest {
         Properties properties = fileSystemService.getPropertiesFromFile(VALID_PROPERTIES_FILE_PATH);
         int expected = properties.getProperty("subcommands").split(",").length;
 
-        FrameworkBaseCommand command = new SetAttributesFromPropertiesFile(
-                new FrameworkCommand("test"), VALID_PROPERTIES_DIRECTORY);
+        Command command = new SetAttributesFromPropertiesFile(
+                new CallableCommand("test"), VALID_PROPERTIES_DIRECTORY);
         command.call();
-        int actual = command.getFrameworkSubcommands().size();
+        int actual = command.getSubcommands().size();
     }
 }

@@ -1,7 +1,7 @@
-package com.blckroot.sdk.command.framework.command.decorator.framework;
+package com.blckroot.sdk.command.decorator;
 
-import com.blckroot.sdk.command.framework.command.FrameworkBaseCommand;
-import com.blckroot.sdk.command.framework.command.FrameworkCommand;
+import com.blckroot.sdk.command.CallableCommand;
+import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import org.junit.jupiter.api.AfterEach;
@@ -38,8 +38,8 @@ public class ExecuteCommandAsPluginTest {
     @Test
     void EXECUTE_COMMAND_AS_PLUGIN__exit_code__no_properties() throws Exception {
         int successExitCode = 0;
-        FrameworkBaseCommand command = new FrameworkCommand("test");
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command command = new CallableCommand("test");
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         int actual = executablePluginCommand.call();
         assertNotEquals(successExitCode, actual);
     }
@@ -50,10 +50,10 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("placeholder key", "placeholder value");
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
 
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         int actual = executablePluginCommand.call();
         assertNotEquals(successExitCode, actual);
     }
@@ -64,9 +64,9 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", "src/test/resources/bad-file-path");
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
 
         int actual = executablePluginCommand.call();
         assertNotEquals(successExitCode, actual);
@@ -78,9 +78,9 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", "src/test/resources/");
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
 
         int actual = executablePluginCommand.call();
         assertNotEquals(successExitCode, actual);
@@ -92,9 +92,9 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", "src/test/resources/echo");
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
 
         int actual = executablePluginCommand.call();
         assertEquals(successExitCode, actual);
@@ -105,9 +105,9 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", VALID_EXECUTABLE_FILE_PATH);
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         executablePluginCommand.call();
 
         String actual = command.getArguments().get(0);
@@ -126,11 +126,11 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", VALID_EXECUTABLE_FILE_PATH);
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
         command.addPositionalParameter(positionalParameter);
 
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         executablePluginCommand.call();
 
         String actual = command.getArguments().get(1);
@@ -148,11 +148,11 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", VALID_EXECUTABLE_FILE_PATH);
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
         command.addOption(option);
 
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         executablePluginCommand.call();
 
         String actual = command.getArguments().get(1);
@@ -170,11 +170,11 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", VALID_EXECUTABLE_FILE_PATH);
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
         command.addOption(option);
 
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         executablePluginCommand.call();
 
         boolean actual = Boolean.parseBoolean(command.getArguments().get(2));
@@ -193,11 +193,11 @@ public class ExecuteCommandAsPluginTest {
         Properties properties = new Properties();
         properties.setProperty("executable.file.path", VALID_EXECUTABLE_FILE_PATH);
 
-        FrameworkBaseCommand command = new FrameworkCommand("test");
+        Command command = new CallableCommand("test");
         command.setProperties(properties);
         command.addOption(option);
 
-        FrameworkBaseCommand executablePluginCommand = new ExecuteCommandAsPlugin(command);
+        Command executablePluginCommand = new ExecuteCommandAsPlugin(command);
         executablePluginCommand.call();
 
         String actual = command.getArguments().get(2);

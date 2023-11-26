@@ -11,7 +11,6 @@
 
     <modules>
         <module>sdk</module>
-        <module>sdk/logger</module>
     </modules>
 
     <properties>

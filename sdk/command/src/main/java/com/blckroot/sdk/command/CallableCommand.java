@@ -1,6 +1,5 @@
-package com.blckroot.sdk.command.framework.command;
+package com.blckroot.sdk.command;
 
-import com.blckroot.sdk.command.model.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 
@@ -9,14 +8,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 
-public class FrameworkCommand extends Command implements FrameworkBaseCommand, Callable<Integer> {
+public class CallableCommand extends com.blckroot.sdk.command.model.Command implements Command, Callable<Integer> {
     private Properties properties;
     private final List<PositionalParameter> positionalParameters = new ArrayList<>();
     private final List<Option> options = new ArrayList<>();
-    private final List<FrameworkBaseCommand> frameworkSubcommands = new ArrayList<>();
+    private final List<Command> subcommands = new ArrayList<>();
     private final List<String> arguments = new ArrayList<>();
 
-    public FrameworkCommand(String name) {
+    public CallableCommand(String name) {
         super(name);
     }
 
@@ -47,13 +46,13 @@ public class FrameworkCommand extends Command implements FrameworkBaseCommand, C
     }
 
     @Override
-    public List<FrameworkBaseCommand> getFrameworkSubcommands() {
-        return frameworkSubcommands;
+    public List<Command> getSubcommands() {
+        return subcommands;
     }
 
     @Override
-    public void addFrameworkSubcommand(FrameworkBaseCommand subcommand) {
-        frameworkSubcommands.add(subcommand);
+    public void addSubcommand(Command subcommand) {
+        subcommands.add(subcommand);
     }
 
     @Override
