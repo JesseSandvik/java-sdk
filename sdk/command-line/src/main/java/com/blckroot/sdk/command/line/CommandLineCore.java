@@ -1,14 +1,27 @@
-package com.blckroot.sdk.command.orchestrator;
+package com.blckroot.sdk.command.line;
 
 import com.blckroot.sdk.command.Command;
-import picocli.CommandLine;
 
-class GenerateCommandLine extends CommandOrchestratorUtilityDecorator {
-    GenerateCommandLine(CommandOrchestratorUtility commandOrchestratorUtility) {
-        super(commandOrchestratorUtility);
+public class CommandLineCore implements CommandLine {
+    private final Command rootCommand;
+    private final picocli.CommandLine commandLine;
+
+    public CommandLineCore(Command rootCommand) {
+        this.rootCommand = rootCommand;
+        this.commandLine = buildCommandLine(rootCommand);
     }
 
-    private CommandLine buildCommandLine(Command command) {
+    @Override
+    public Command getRootCommand() {
+        return rootCommand;
+    }
+
+    @Override
+    public picocli.CommandLine getCommandLine() {
+        return commandLine;
+    }
+
+    private picocli.CommandLine buildCommandLine(Command command) {
         CommandLineBuilder commandLineBuilder = new CommandLineBuilder(command).addStandardUsageHelpOption();
 
         if (command.getVersion() != null) {
@@ -34,7 +47,6 @@ class GenerateCommandLine extends CommandOrchestratorUtilityDecorator {
 
     @Override
     public Integer execute(String[] arguments) {
-        commandOrchestratorUtility.setCommandLine(buildCommandLine(this.commandOrchestratorUtility.getCommand()));
-        return super.execute(arguments);
+        return 0;
     }
 }
