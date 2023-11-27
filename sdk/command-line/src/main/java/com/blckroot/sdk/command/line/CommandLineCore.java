@@ -47,7 +47,6 @@ public class CommandLineCore implements CommandLine {
 
     @Override
     public Integer execute(String[] arguments) throws Exception {
-        System.out.println("> Command Line Core Triggered.");
         return 0;
     }
 }

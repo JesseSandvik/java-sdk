@@ -45,6 +45,8 @@ class CommandLineBuilder {
     }
 
     public CommandLineBuilder addStandardVersionHelpOption() {
+        commandSpec.version(command.getVersion());
+
         commandSpec.addOption(OptionSpec
                 .builder("-v", "--version")
                 .description("Print version information and exit.")
