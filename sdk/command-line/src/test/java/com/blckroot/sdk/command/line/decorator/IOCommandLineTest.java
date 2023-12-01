@@ -67,11 +67,24 @@ public class IOCommandLineTest {
         return new CallableCommand("subtestA");
     }
 
+    Command getNestedSubcommand() {
+        return new CallableCommand("subtestB");
+    }
+
     // BASE COMMAND
 
     @Test
     void IO_COMMAND_LINE__usage_help__no_arguments__exit_code__success() throws Exception {
         int expected = 0;
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(new String[]{});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void IO_COMMAND_LINE__executes_without_arguments__no_arguments__exit_code__success() throws Exception {
+        baseCommand.setExecutesWithoutArguments(true);
+        int expected = baseCommand.call();
         CommandLine commandLine = new IOCommandLine(getCommandLineCore());
         int actual = commandLine.execute(new String[]{});
         assertEquals(expected, actual);
@@ -723,6 +736,18 @@ public class IOCommandLineTest {
     }
 
     @Test
+    void IO_COMMAND_LINE__subcommand__executes_without_arguments__no_arguments__exit_code__success() throws Exception {
+        Command subcommand = getSubcommand();
+        subcommand.setExecutesWithoutArguments(true);
+        int expected = subcommand.call();
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(new String[]{subcommand.getName()});
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void IO_COMMAND_LINE__subcommand__usage_help__no_arguments__output__command_name() throws Exception {
         Command subcommand = getSubcommand();
         baseCommand.addSubcommand(subcommand);
@@ -1343,6 +1368,770 @@ public class IOCommandLineTest {
         baseCommand.addSubcommand(subcommand);
         CommandLine commandLine = new IOCommandLine(getCommandLineCore());
         commandLine.execute(new String[]{subcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(option.getLabel()));
+    }
+
+    // NESTED SUBCOMMAND
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__exit_code__success() throws Exception {
+        int expected = 0;
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(
+                new String[]{subcommand.getName(), nestedSubcommand.getName()});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__executes_without_arguments__no_arguments__exit_code__success() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        nestedSubcommand.setExecutesWithoutArguments(true);
+        int expected = nestedSubcommand.call();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(
+                new String[]{subcommand.getName(), nestedSubcommand.getName()});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        String expected = nestedSubcommand.getName();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), expected});
+
+        assertTrue(out.toString().contains(expected));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        PositionalParameter positionalParameter = getPositionalParameter();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_no_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertFalse(out.toString().contains(option.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__no_arguments__output__command_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName()});
+
+        assertTrue(out.toString().contains(option.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__exit_code__success() throws Exception {
+        int expected = 0;
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(
+                new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        String expected = nestedSubcommand.getName();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), expected, "-h"});
+
+        assertTrue(out.toString().contains(expected));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        PositionalParameter positionalParameter = getPositionalParameter();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_no_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertFalse(out.toString().contains(option.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__short_option__output__command_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "-h"});
+
+        assertTrue(out.toString().contains(option.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__exit_code__success() throws Exception {
+        int expected = 0;
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        int actual = commandLine.execute(
+                new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        String expected = nestedSubcommand.getName();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), expected, "--help"});
+
+        assertTrue(out.toString().contains(expected));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_version__short() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains("-v"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_version__long() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        nestedSubcommand.setVersion(baseCommandVersion);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains("--version"));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+
+        PositionalParameter positionalParameter = getPositionalParameter();
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_positional_parameter__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(positionalParameter.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_positional_parameter__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        PositionalParameter positionalParameter = getPositionalParameter();
+        nestedSubcommand.addPositionalParameter(positionalParameter);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(positionalParameter.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_option__long_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(option.getLongName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_option__synopsis() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(option.getSynopsis()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_option__short_name() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionShortName(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertTrue(out.toString().contains(option.getShortName()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_no_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
+
+        assertFalse(out.toString().contains(option.getLabel()));
+    }
+
+    @Test
+    void IO_COMMAND_LINE__nested_subcommand__usage_help__long_option__output__command_option__label() throws Exception {
+        Command nestedSubcommand = getNestedSubcommand();
+        Command subcommand = getSubcommand();
+        Option option = getOption();
+        addOptionLabel(option);
+        nestedSubcommand.addOption(option);
+        subcommand.addSubcommand(nestedSubcommand);
+        baseCommand.addSubcommand(subcommand);
+        CommandLine commandLine = new IOCommandLine(getCommandLineCore());
+        commandLine.execute(new String[]{subcommand.getName(), nestedSubcommand.getName(), "--help"});
 
         assertTrue(out.toString().contains(option.getLabel()));
     }
