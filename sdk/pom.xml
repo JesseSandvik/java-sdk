@@ -15,9 +15,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>logger</module>
-        <module>file-system</module>
         <module>command</module>
+        <module>command-line</module>
+        <module>file-system</module>
+        <module>logger</module>
     </modules>
 
 </project>

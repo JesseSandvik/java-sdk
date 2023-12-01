@@ -1,4 +1,4 @@
-package com.blckroot.sdk.command.framework.command;
+package com.blckroot.sdk.command;
 
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
@@ -6,7 +6,7 @@ import com.blckroot.sdk.command.model.PositionalParameter;
 import java.util.List;
 import java.util.Properties;
 
-public interface FrameworkBaseCommand {
+public interface Command {
     Properties getProperties();
     void setProperties(Properties properties);
     String getName();
@@ -22,8 +22,8 @@ public interface FrameworkBaseCommand {
     void addPositionalParameter(PositionalParameter positionalParameter);
     List<Option> getOptions();
     void addOption(Option option);
-    List<FrameworkBaseCommand> getFrameworkSubcommands();
-    void addFrameworkSubcommand(FrameworkBaseCommand subcommand);
+    List<Command> getSubcommands();
+    void addSubcommand(Command subcommand);
     List<String> getArguments();
     void addArgument(String argument);
     Integer call() throws Exception;

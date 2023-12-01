@@ -1,6 +1,6 @@
-package com.blckroot.sdk.command.framework;
+package com.blckroot.sdk.command.line;
 
-import com.blckroot.sdk.command.framework.command.FrameworkBaseCommand;
+import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import picocli.CommandLine;
@@ -9,12 +9,12 @@ import picocli.CommandLine.Model.PositionalParamSpec;
 import picocli.CommandLine.Model.OptionSpec;
 
 class CommandLineBuilder {
-    private final FrameworkBaseCommand frameworkBaseCommand;
+    private final Command command;
     private final CommandSpec commandSpec;
 
-    CommandLineBuilder(FrameworkBaseCommand frameworkBaseCommand) {
-        this.frameworkBaseCommand = frameworkBaseCommand;
-        this.commandSpec = CommandSpec.create().name(frameworkBaseCommand.getName());
+    CommandLineBuilder(Command command) {
+        this.command = command;
+        this.commandSpec = CommandSpec.create().name(command.getName());
     }
 
     public CommandLineBuilder addCustomUsageHelpFormat(CommandSpec commandSpec) {
@@ -24,28 +24,32 @@ class CommandLineBuilder {
                 .optionListHeading("%nOptions:%n")
                 .commandListHeading("%nCommands:%n");
 
-        if (frameworkBaseCommand.getSynopsis() != null) {
-            commandSpec.usageMessage().description(frameworkBaseCommand.getSynopsis());
+        if (command.getSynopsis() != null) {
+            commandSpec.usageMessage().description(command.getSynopsis());
         }
 
-        if (frameworkBaseCommand.getDescription() != null) {
-            commandSpec.usageMessage().footer("%n" + frameworkBaseCommand.getDescription() + "%n");
+        if (command.getDescription() != null) {
+            commandSpec.usageMessage().footer("%n" + command.getDescription() + "%n");
         }
 
         return this;
     }
 
-    public CommandLineBuilder addStandardUsageHelpOption(CommandSpec commandSpec) {
+    public CommandLineBuilder addStandardUsageHelpOption() {
         commandSpec.addOption(OptionSpec
                 .builder("-h", "--help")
+                .description("Show this help message and exit.")
                 .usageHelp(true)
                 .build());
         return this;
     }
 
-    public CommandLineBuilder addStandardVersionHelpOption(CommandSpec commandSpec) {
+    public CommandLineBuilder addStandardVersionHelpOption() {
+        commandSpec.version(command.getVersion());
+
         commandSpec.addOption(OptionSpec
                 .builder("-v", "--version")
+                .description("Print version information and exit.")
                 .versionHelp(true)
                 .build());
         return this;
@@ -85,34 +89,12 @@ class CommandLineBuilder {
         return this;
     }
 
-    public CommandLineBuilder addSubcommand(FrameworkBaseCommand frameworkBaseCommand) {
-        commandSpec.addSubcommand(frameworkBaseCommand.getName(), new CommandLineBuilder(frameworkBaseCommand).build());
+    public CommandLineBuilder addSubcommand(CommandLine commandLine) {
+        commandSpec.addSubcommand(commandLine.getCommandName(), commandLine);
         return this;
     }
 
     public CommandLine build() {
-        addCustomUsageHelpFormat(commandSpec);
-        addStandardUsageHelpOption(commandSpec);
-
-        if (frameworkBaseCommand.getVersion() != null) {
-            commandSpec.version(frameworkBaseCommand.getVersion());
-            addStandardVersionHelpOption(commandSpec);
-        }
-
-        if (!frameworkBaseCommand.getPositionalParameters().isEmpty()) {
-            frameworkBaseCommand.getPositionalParameters()
-                    .forEach(positionalParameter -> addPositionalParameter(positionalParameter));
-        }
-
-        if (!frameworkBaseCommand.getOptions().isEmpty()) {
-            frameworkBaseCommand.getOptions().forEach(option -> addOption(option));
-        }
-
-        if (!frameworkBaseCommand.getFrameworkSubcommands().isEmpty()) {
-            frameworkBaseCommand.getFrameworkSubcommands()
-                    .forEach(frameworkBaseSubcommand -> addSubcommand(frameworkBaseSubcommand));
-        }
-
         return new CommandLine(commandSpec);
     }
 }

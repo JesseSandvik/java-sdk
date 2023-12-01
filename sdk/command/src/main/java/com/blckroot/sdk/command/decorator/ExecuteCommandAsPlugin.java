@@ -1,23 +1,22 @@
-package com.blckroot.sdk.command.framework.command.decorator.framework;
+package com.blckroot.sdk.command.decorator;
 
-import com.blckroot.sdk.command.framework.command.FrameworkBaseCommand;
-import com.blckroot.sdk.command.framework.command.decorator.FrameworkCommandDecorator;
+import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.file.system.executor.FileSystemExecutor;
 import com.blckroot.sdk.file.system.validator.FileSystemValidator;
 
 import java.util.Properties;
 
-public class ExecuteCommandAsPlugin extends FrameworkCommandDecorator {
+public class ExecuteCommandAsPlugin extends CommandDecorator {
 
-    public ExecuteCommandAsPlugin(FrameworkBaseCommand frameworkCommand) {
-        super(frameworkCommand);
+    public ExecuteCommandAsPlugin(Command command) {
+        super(command);
     }
 
-    private Boolean propertyIsValid(FrameworkBaseCommand frameworkBaseCommand, String key) {
+    private Boolean propertyIsValid(Command command, String key) {
         if (key == null || key.isBlank()) {
             return false;
         }
-        return frameworkBaseCommand.getProperties().getProperty(key) != null;
+        return command.getProperties().getProperty(key) != null;
     }
 
     private Boolean propertiesAreValid(Properties properties) {
@@ -26,19 +25,19 @@ public class ExecuteCommandAsPlugin extends FrameworkCommandDecorator {
 
     @Override
     public Integer call() throws Exception {
-        if (!propertiesAreValid(frameworkCommand.getProperties())) {
+        if (!propertiesAreValid(command.getProperties())) {
 //            TODO: improve handling behavior
             return 1;
         }
 
         final String EXECUTABLE_FILE_PATH_PROPERTY_KEY = "executable.file.path";
-        if (!propertyIsValid(frameworkCommand, EXECUTABLE_FILE_PATH_PROPERTY_KEY)) {
+        if (!propertyIsValid(command, EXECUTABLE_FILE_PATH_PROPERTY_KEY)) {
             System.out.println("executable file path property does not exist");
 //            TODO: handle missing executable file path property from properties.
             return 1;
         }
 
-        String executableFilePath = frameworkCommand.getProperties().getProperty(EXECUTABLE_FILE_PATH_PROPERTY_KEY);
+        String executableFilePath = command.getProperties().getProperty(EXECUTABLE_FILE_PATH_PROPERTY_KEY);
         FileSystemValidator fileSystemValidator = new FileSystemValidator();
         if (!fileSystemValidator.fileExists(executableFilePath) || !fileSystemValidator.fileCanExecute(executableFilePath)) {
             System.out.println("executable file does not exist: " + executableFilePath);
@@ -46,23 +45,23 @@ public class ExecuteCommandAsPlugin extends FrameworkCommandDecorator {
             return 1;
         }
 
-        frameworkCommand.addArgument(executableFilePath);
+        command.addArgument(executableFilePath);
 
-        frameworkCommand.getPositionalParameters().forEach(positionalParameter -> {
+        command.getPositionalParameters().forEach(positionalParameter -> {
             if (positionalParameter.getValue() != null) {
-                frameworkCommand.addArgument(positionalParameter.getValue().toString());
+                command.addArgument(positionalParameter.getValue().toString());
             }
         });
 
-        frameworkCommand.getOptions().forEach(option -> {
+        command.getOptions().forEach(option -> {
             if (option.getValue() != null) {
-                frameworkCommand.addArgument(option.getLongName());
-                frameworkCommand.addArgument(option.getValue().toString());
+                command.addArgument(option.getLongName());
+                command.addArgument(option.getValue().toString());
             }
         });
 
         FileSystemExecutor fileSystemExecutor = new FileSystemExecutor();
-        fileSystemExecutor.executeCommand(frameworkCommand.getArguments(), System.out);
+        fileSystemExecutor.executeCommand(command.getArguments(), System.out);
         return super.call();
     }
 }
