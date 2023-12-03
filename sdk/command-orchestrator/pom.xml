@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>blckroot.sdk.command.line</artifactId>
+    <artifactId>blckroot.sdk.command.orchestrator</artifactId>
 
     <dependencies>
         <dependency>

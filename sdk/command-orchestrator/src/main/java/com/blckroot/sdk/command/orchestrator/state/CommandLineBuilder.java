@@ -1,12 +1,12 @@
-package com.blckroot.sdk.command.line;
+package com.blckroot.sdk.command.orchestrator.state;
 
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import picocli.CommandLine;
 import picocli.CommandLine.Model.CommandSpec;
-import picocli.CommandLine.Model.PositionalParamSpec;
 import picocli.CommandLine.Model.OptionSpec;
+import picocli.CommandLine.Model.PositionalParamSpec;
 
 class CommandLineBuilder {
     private final Command command;
@@ -17,7 +17,7 @@ class CommandLineBuilder {
         this.commandSpec = CommandSpec.create().name(command.getName());
     }
 
-    public CommandLineBuilder addCustomUsageHelpFormat(CommandSpec commandSpec) {
+    public CommandLineBuilder addCustomUsageHelpFormat() {
         commandSpec.usageMessage()
                 .abbreviateSynopsis(true)
                 .parameterListHeading("%nPositional Parameters:%n")
