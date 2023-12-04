@@ -5,12 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.blckroot</groupId>
-    <artifactId>com.blckroot</artifactId>
+    <artifactId>com.blckroot.sdk</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>sdk</module>
+        <module>command</module>
+        <module>command-orchestrator</module>
+        <module>file-system</module>
+        <module>logger</module>
+        <module>operating-system</module>
     </modules>
 
     <properties>
@@ -75,6 +79,27 @@
                 <groupId>info.picocli</groupId>
                 <artifactId>picocli</artifactId>
                 <version>${picocli.version}</version>
+            </dependency>
+            <!-- SDK -->
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.command</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.command.orchestrator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.file.system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.operating.system</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
