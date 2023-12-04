@@ -3,6 +3,7 @@ package com.blckroot.sdk.command.decorator;
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
+import com.blckroot.sdk.operating.system.OperatingSystem;
 
 import java.util.List;
 import java.util.Properties;
@@ -12,6 +13,16 @@ public abstract class CommandDecorator implements Command {
 
     protected CommandDecorator(Command command) {
         this.command = command;
+    }
+
+    @Override
+    public OperatingSystem getOperatingSystem() {
+        return this.command.getOperatingSystem();
+    }
+
+    @Override
+    public void setOperatingSystem(OperatingSystem operatingSystem) {
+        this.command.setOperatingSystem(operatingSystem);
     }
 
     @Override

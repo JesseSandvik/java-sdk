@@ -5,28 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.blckroot</groupId>
-        <artifactId>com.blckroot.sdk</artifactId>
+        <artifactId>com.blckroot</artifactId>
         <version>1.0.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>blckroot.sdk.command.orchestrator</artifactId>
+    <artifactId>blckroot.command.root</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.blckroot</groupId>
             <artifactId>blckroot.sdk.command</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.blckroot</groupId>
-            <artifactId>blckroot.sdk.file.system</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.blckroot</groupId>
-            <artifactId>blckroot.sdk.operating.system</artifactId>
-            <version>${project.version}</version>
+            <artifactId>blckroot.sdk.command.orchestrator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -35,10 +28,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
         </dependency>
     </dependencies>
 

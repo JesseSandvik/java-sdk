@@ -2,6 +2,7 @@ package com.blckroot.sdk.command;
 
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
+import com.blckroot.sdk.operating.system.OperatingSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 
 public class CallableCommand extends com.blckroot.sdk.command.model.Command implements Command, Callable<Integer> {
+    private OperatingSystem operatingSystem;
     private Properties properties;
     private final List<PositionalParameter> positionalParameters = new ArrayList<>();
     private final List<Option> options = new ArrayList<>();
@@ -17,6 +19,14 @@ public class CallableCommand extends com.blckroot.sdk.command.model.Command impl
 
     public CallableCommand(String name) {
         super(name);
+    }
+
+    public OperatingSystem getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public void setOperatingSystem(OperatingSystem operatingSystem) {
+        this.operatingSystem = operatingSystem;
     }
 
     public Properties getProperties() {

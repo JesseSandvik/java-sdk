@@ -76,6 +76,27 @@
                 <artifactId>picocli</artifactId>
                 <version>${picocli.version}</version>
             </dependency>
+            <!-- SDK -->
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.command</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.command.orchestrator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.file.system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.operating.system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

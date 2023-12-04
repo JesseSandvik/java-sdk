@@ -1,12 +1,11 @@
-package com.blckroot.sdk.command.orchestrator.state;
+package com.blckroot.sdk.command.orchestrator.state.picocli;
 
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.orchestrator.model.CommandExecution;
 import picocli.CommandLine;
 
-class BuildCommandLine {
-
-    public static void run(CommandExecution commandExecution) {
+class BuildPicocliCommandLine {
+    public static void build(CommandExecution commandExecution) {
         CommandLine picocliCommandLine = buildCommandLine(commandExecution.getCommand());
         commandExecution.setPicocliCommandLine(picocliCommandLine);
     }
@@ -14,6 +13,7 @@ class BuildCommandLine {
     private static CommandLine buildCommandLine(Command command) {
         CommandLineBuilder commandLineBuilder = new CommandLineBuilder(command)
                 .addCustomUsageHelpFormat()
+                .addDisableInteractiveInputOption()
                 .addStandardUsageHelpOption();
 
         if (command.getVersion() != null) {

@@ -1,4 +1,4 @@
-package com.blckroot.sdk.command.orchestrator.state;
+package com.blckroot.sdk.command.orchestrator.state.picocli;
 
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
@@ -51,6 +51,15 @@ class CommandLineBuilder {
                 .builder("-v", "--version")
                 .description("Print version information and exit.")
                 .versionHelp(true)
+                .build());
+        return this;
+    }
+
+    public CommandLineBuilder addDisableInteractiveInputOption() {
+        commandSpec.addOption(OptionSpec
+                .builder("--no-input")
+                .description("Disable interactive input.")
+                .type(Boolean.class)
                 .build());
         return this;
     }

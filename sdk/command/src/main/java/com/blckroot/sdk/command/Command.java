@@ -2,11 +2,14 @@ package com.blckroot.sdk.command;
 
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
+import com.blckroot.sdk.operating.system.OperatingSystem;
 
 import java.util.List;
 import java.util.Properties;
 
 public interface Command {
+    OperatingSystem getOperatingSystem();
+    void setOperatingSystem(OperatingSystem operatingSystem);
     Properties getProperties();
     void setProperties(Properties properties);
     String getName();

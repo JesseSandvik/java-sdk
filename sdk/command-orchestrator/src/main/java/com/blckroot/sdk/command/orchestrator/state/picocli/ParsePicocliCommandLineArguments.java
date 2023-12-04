@@ -1,17 +1,17 @@
-package com.blckroot.sdk.command.orchestrator.state;
+package com.blckroot.sdk.command.orchestrator.state.picocli;
 
 import com.blckroot.sdk.command.Command;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import com.blckroot.sdk.command.orchestrator.model.CommandExecution;
 import picocli.CommandLine;
-import picocli.CommandLine.ParseResult;
-import picocli.CommandLine.Model.PositionalParamSpec;
 import picocli.CommandLine.Model.OptionSpec;
+import picocli.CommandLine.Model.PositionalParamSpec;
+import picocli.CommandLine.ParseResult;
 
 import java.util.*;
 
-class ParseArguments {
+class ParsePicocliCommandLineArguments {
     private static Integer usageHelp(CommandLine commandLine) {
         commandLine.usage(commandLine.getOut());
         return commandLine.getCommandSpec().exitCodeOnUsageHelp();
@@ -42,7 +42,7 @@ class ParseArguments {
         return null;
     }
 
-    private static List<String> getAvailableParameters(picocli.CommandLine picocliCommandLine) {
+    private static List<String> getAvailableParameters(CommandLine picocliCommandLine) {
         List<String> availableParameters = new ArrayList<>(picocliCommandLine.getSubcommands().keySet());
         picocliCommandLine.getCommandSpec().options()
                 .forEach(optionSpec -> availableParameters.add(optionSpec.longestName()));
@@ -90,7 +90,7 @@ class ParseArguments {
         return "Did you mean " + "'" + misspelledParameterCandidate + "'?";
     }
 
-    public static void run(CommandExecution commandExecution) {
+    public static void parse(CommandExecution commandExecution) {
         try {
             CommandLine picocliCommandLine = commandExecution.getPicocliCommandLine();
             ParseResult parseResult = picocliCommandLine.parseArgs(commandExecution.getArguments());
@@ -112,11 +112,8 @@ class ParseArguments {
                     return;
                 }
 
-                if (currentParseResult.expandedArgs().isEmpty()) {
-                    if (currentCommand.isExecutesWithoutArguments()) {
-                        commandExecution.setCommand(currentCommand);
-                        return;
-                    }
+                if (currentParseResult.expandedArgs().isEmpty() && !currentCommand.isExecutesWithoutArguments()) {
+                    commandExecution.setCommand(currentCommand);
                     commandExecution.setExitCode(usageHelp(currentCommandLine));
                     return;
                 }
@@ -148,9 +145,15 @@ class ParseArguments {
                         });
                     }
                 }
+
+                if (commandLineQueue.isEmpty()) {
+                    System.out.println("SETTING CURRENT COMMAND: " + currentCommand.getName());
+                    commandExecution.setCommand(currentCommand);
+                    return;
+                }
             }
         } catch (CommandLine.UnmatchedArgumentException unmatchedArgumentException) {
-            picocli.CommandLine executedCommandLine = unmatchedArgumentException.getCommandLine();
+            CommandLine executedCommandLine = unmatchedArgumentException.getCommandLine();
             List<String> originalArguments = executedCommandLine.getParseResult().originalArgs();
             List<String> availableParameters = getAvailableParameters(executedCommandLine);
             String unmatchedArgument = unmatchedArgumentException.getUnmatched().get(0);
@@ -197,7 +200,7 @@ class ParseArguments {
                         }
                     }
                     commandExecution.setArguments(updatedArguments);
-                    run(commandExecution);
+                    parse(commandExecution);
                     return;
                 }
             }
