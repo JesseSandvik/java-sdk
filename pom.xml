@@ -5,12 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.blckroot</groupId>
-    <artifactId>com.blckroot</artifactId>
+    <artifactId>com.blckroot.sdk</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>sdk</module>
+        <module>command</module>
+        <module>command-orchestrator</module>
+        <module>file-system</module>
+        <module>logger</module>
+        <module>operating-system</module>
     </modules>
 
     <properties>
