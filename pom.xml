@@ -10,11 +10,16 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>_aggregated-test-report</module>
         <module>command</module>
         <module>command-orchestrator</module>
+        <module>csv</module>
         <module>file-system</module>
+        <module>json</module>
         <module>logger</module>
         <module>operating-system</module>
+        <module>output</module>
+        <module>string</module>
     </modules>
 
     <properties>
@@ -23,6 +28,8 @@
         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Third Party Dependencies -->
+        <apache.commons.csv.version>1.10.0</apache.commons.csv.version>
+        <jackson.databind.version>2.16.0</jackson.databind.version>
         <jacoco.version>0.8.11</jacoco.version>
         <junit.version>5.10.1</junit.version>
         <log4j.version>3.0.0-alpha1</log4j.version>
@@ -55,6 +62,16 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-csv</artifactId>
+                <version>${apache.commons.csv.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.databind.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
@@ -93,12 +110,32 @@
             </dependency>
             <dependency>
                 <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.csv</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
                 <artifactId>blckroot.sdk.file.system</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.json</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
                 <artifactId>blckroot.sdk.operating.system</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.output</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.blckroot</groupId>
+                <artifactId>blckroot.sdk.string</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
