@@ -11,8 +11,7 @@
 
     <modules>
         <module>_aggregated-test-report</module>
-        <module>command</module>
-        <module>command-orchestrator</module>
+        <module>intelligence-orchestrator</module>
         <module>csv</module>
         <module>file-system</module>
         <module>json</module>
@@ -98,11 +97,6 @@
                 <version>${picocli.version}</version>
             </dependency>
             <!-- SDK -->
-            <dependency>
-                <groupId>com.blckroot</groupId>
-                <artifactId>blckroot.sdk.command</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.blckroot</groupId>
                 <artifactId>blckroot.sdk.command.orchestrator</artifactId>
