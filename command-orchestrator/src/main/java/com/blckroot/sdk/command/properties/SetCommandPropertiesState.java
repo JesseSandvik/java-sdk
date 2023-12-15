@@ -1,6 +1,7 @@
 package com.blckroot.sdk.command.properties;
 
 import com.blckroot.sdk.command.Command;
+import com.blckroot.sdk.command.CommandFactory;
 import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import com.blckroot.sdk.file.system.service.FileSystemService;
@@ -157,6 +158,20 @@ public enum SetCommandPropertiesState {
 
         @Override
         public Integer run(Command command) {
+            Properties properties = command.getProperties();
+            final String SUBCOMMANDS_PROPERTY_KEY="subcommands";
+
+            if (properties.getProperty(SUBCOMMANDS_PROPERTY_KEY) != null) {
+                String[] subcommandNames = properties.getProperty(SUBCOMMANDS_PROPERTY_KEY).split(",");
+                int exitCode = 0;
+
+                for (String subcommandName : subcommandNames) {
+                    Command subcommand = CommandFactory.create(subcommandName);
+                    exitCode = SetCommandProperties.setProperties(subcommand);
+                    command.addSubcommand(subcommand);
+                }
+                return exitCode;
+            }
             return 0;
         }
     },
