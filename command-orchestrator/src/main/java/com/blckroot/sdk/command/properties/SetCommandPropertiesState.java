@@ -1,6 +1,7 @@
 package com.blckroot.sdk.command.properties;
 
 import com.blckroot.sdk.command.Command;
+import com.blckroot.sdk.command.model.Option;
 import com.blckroot.sdk.command.model.PositionalParameter;
 import com.blckroot.sdk.file.system.service.FileSystemService;
 
@@ -79,9 +80,10 @@ public enum SetCommandPropertiesState {
         public Integer run(Command command) {
             Properties properties = command.getProperties();
             final String POSITIONAL_PARAMETER_COUNT_PROPERTY_KEY="positional.parameter.count";
+
             if (properties.getProperty(POSITIONAL_PARAMETER_COUNT_PROPERTY_KEY) != null) {
                 int positionalParameterCount =
-                        Integer.parseInt(command.getProperties().getProperty(POSITIONAL_PARAMETER_COUNT_PROPERTY_KEY));
+                        Integer.parseInt(properties.getProperty(POSITIONAL_PARAMETER_COUNT_PROPERTY_KEY));
                 final String POSITIONAL_PARAMETER_LABEL_PROPERTY_KEY="positional.parameter.label";
                 final String POSITIONAL_PARAMETER_SYNOPSIS_PROPERTY_KEY="positional.parameter.synopsis";
 
@@ -112,6 +114,38 @@ public enum SetCommandPropertiesState {
 
         @Override
         public Integer run(Command command) {
+            Properties properties = command.getProperties();
+            final String OPTION_COUNT_PROPERTY_KEY="option.count";
+
+            if (properties.getProperty(OPTION_COUNT_PROPERTY_KEY) != null) {
+                int optionCount = Integer.parseInt(properties.getProperty(OPTION_COUNT_PROPERTY_KEY));
+                final String OPTION_LONG_NAME_PROPERTY_KEY="option.long.name";
+                final String OPTION_SHORT_NAME_PROPERTY_KEY="option.short.name";
+                final String OPTION_SYNOPSIS_PROPERTY_KEY="option.synopsis";
+                final String OPTION_LABEL_PROPERTY_KEY="option.label";
+
+                for (int i = 1; i <= optionCount; i+=1) {
+                    Option option = new Option();
+
+                    if (properties.getProperty(i + "." + OPTION_LONG_NAME_PROPERTY_KEY) != null) {
+                        option.setLongName(properties.getProperty(i + "." + OPTION_LONG_NAME_PROPERTY_KEY));
+                    }
+
+                    if (properties.getProperty(i + "." + OPTION_SHORT_NAME_PROPERTY_KEY) != null) {
+                        option.setShortName(properties.getProperty(i + "." + OPTION_SHORT_NAME_PROPERTY_KEY));
+                    }
+
+                    if (properties.getProperty(i + "." + OPTION_SYNOPSIS_PROPERTY_KEY) != null) {
+                        option.setSynopsis(properties.getProperty(i + "." + OPTION_SYNOPSIS_PROPERTY_KEY));
+                    }
+
+                    if (properties.getProperty(i + "." + OPTION_LABEL_PROPERTY_KEY) != null) {
+                        option.setLabel(properties.getProperty(i + "." + OPTION_LABEL_PROPERTY_KEY));
+                    }
+
+                    command.addOption(option);
+                }
+            }
             return 0;
         }
     },
