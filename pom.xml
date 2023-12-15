@@ -11,12 +11,11 @@
 
     <modules>
         <module>_aggregated-test-report</module>
-        <module>intelligence-orchestrator</module>
+        <module>command-orchestrator</module>
         <module>csv</module>
         <module>file-system</module>
         <module>json</module>
         <module>logger</module>
-        <module>operating-system</module>
         <module>output</module>
         <module>string</module>
     </modules>
